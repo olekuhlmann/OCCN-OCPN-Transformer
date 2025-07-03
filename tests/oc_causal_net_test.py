@@ -2,6 +2,8 @@ import unittest
 import pm4py
 from pm4py.objects.oc_causal_net.obj import OCCausalNet
 from pm4py.objects.oc_causal_net import converter
+from pm4py.objects.ocpn import converter as ocpn_converter
+from pm4py.visualization.ocel.ocpn import visualizer as ocpn_visualizer
 import networkx as nx
 import re
 
@@ -255,6 +257,88 @@ class OCCausalNetTest(unittest.TestCase):
         # also test exceptions of the conversion to OCPN (no test of correctness here)
         ocpn = converter.apply(occn)
         print(ocpn)
+
+        # TODO MOVE TO PROPER PLACE
+        # for visualization purposes, remove the p_binding_global_input place and all corresponding arcs
+        ocpn_for_viz = OCPetriNet(
+            name=ocpn.name,
+            places= [p for p in ocpn.places if p.name != "p_binding_global_input"],
+            transitions=ocpn.transitions,
+            arcs=[arc for arc in ocpn.arcs if arc.source.name != "p_binding_global_input" and arc.target.name != "p_binding_global_input"],
+            initial_marking=ocpn.initial_marking,
+            final_marking=ocpn.final_marking,
+            properties=ocpn.properties,
+        )
+        # for visualization purposes, add labels to silent transitions
+        for t in ocpn_for_viz.transitions:
+            t.label = t.name
+        alternate_ocpn = ocpn_converter.apply(ocpn_for_viz, variant=ocpn_converter.Variants.TO_ALTERNATIVE_FORMAT)
+        gviz = ocpn_visualizer.apply(alternate_ocpn)
+        ocpn_visualizer.save(gviz, "ocpn_test_03.gv")
+        
+    def test_constructor_04(self):
+        marker_groups = {
+            "START_order": {
+                "omg": [
+                    [("a", "order", (1, 1), 0), ("b", "order", (1, 1), 0)],
+                ],
+            },
+            "a": {
+                "img": [
+                    [("START_order", "order", (1, 1), 0)],
+                ],
+                "omg": [
+                    [("c", "order", (1, 1), 0)],
+                ],
+            },
+            "b": {
+                "img": [
+                    [("START_order", "order", (1, 1), 0)],
+                ],
+                "omg": [
+                    [("c", "order", (1, 1), 0)],
+                ],
+            },
+            "c": {
+                "img": [
+                    [("a", "order", (1, -1), 1), ("b", "order", (1, -1), 1)],
+                ],
+                "omg": [
+                    [("END_order", "order", (1, -1), 0)],
+                ],
+            },
+            "END_order": {
+                "img": [
+                    [("c", "order", (1, 1), 0)],
+                ],
+            },
+        }
+        
+        occn = create_oc_causal_net(marker_groups)
+        print("\nTEST OCCN CONSTRUCTOR 04")
+        print(occn)
+        
+        # also test exceptions of the conversion to OCPN (no test of correctness here)
+        ocpn = converter.apply(occn)
+        print(ocpn)
+
+        # TODO MOVE TO PROPER PLACE
+        # for visualization purposes, remove the p_binding_global_input place and all corresponding arcs
+        ocpn_for_viz = OCPetriNet(
+            name=ocpn.name,
+            places= [p for p in ocpn.places if p.name != "p_binding_global_input"],
+            transitions=ocpn.transitions,
+            arcs=[arc for arc in ocpn.arcs if arc.source.name != "p_binding_global_input" and arc.target.name != "p_binding_global_input"],
+            initial_marking=ocpn.initial_marking,
+            final_marking=ocpn.final_marking,
+            properties=ocpn.properties,
+        )
+        # for visualization purposes, add labels to silent transitions
+        for t in ocpn_for_viz.transitions:
+            t.label = t.name
+        alternate_ocpn = ocpn_converter.apply(ocpn_for_viz, variant=ocpn_converter.Variants.TO_ALTERNATIVE_FORMAT)
+        gviz = ocpn_visualizer.apply(alternate_ocpn)
+        ocpn_visualizer.save(gviz, "ocpn_test_04.gv")
         
 
     def test_conversion_basic(self):
