@@ -19,7 +19,7 @@ visit <https://www.gnu.org/licenses/>.
 Website: https://processintelligence.solutions
 Contact: info@processintelligence.solutions
 '''
-from pm4py.algo.simulation.playout.ocpn.variants import extensive
+from pm4py.algo.simulation.playout.ocpn.variants import extensive, random_walk
 from pm4py.util import exec_utils
 from enum import Enum
 from pm4py.objects.ocpn.obj import OCPetriNet, OCMarking
@@ -29,10 +29,11 @@ from pm4py.objects.ocel.obj import OCEL
 
 class Variants(Enum):
     EXTENSIVE = extensive
+    RANDOM_WARLK = random_walk
 
 
-DEFAULT_VARIANT = Variants.EXTENSIVE
-VERSIONS = {Variants.EXTENSIVE}
+DEFAULT_VARIANT = Variants.RANDOM_WARLK
+VERSIONS = {Variants.EXTENSIVE, Variants.RANDOM_WARLK}
 
 
 def apply(net: OCPetriNet, initial_marking: OCMarking, final_marking: OCMarking, parameters: Optional[Dict[Any, Any]] = None, variant=DEFAULT_VARIANT) -> OCEL:
@@ -51,7 +52,8 @@ def apply(net: OCPetriNet, initial_marking: OCMarking, final_marking: OCMarking,
         Parameters of the algorithm
     variant
         Variant of the algorithm to use:
-            - Variants.EXTENSIVE: gets all the traces from the model. can be expensive
+            - Variants.EXTENSIVE: gets all the traces from the model. Very expensive
+            - Variants.RANDOM_WALK: Takes a random walk through the model, generating a log with a specified number of traces. Note known biases of this method.
             
     Returns
     -----------

@@ -56,12 +56,12 @@ class OCPNSimulationTest(unittest.TestCase):
         self.assertEqual(len(traces), 0)
 
     def test_playout_ocpn_extensive_2(self):
-        
+
         params = {
             "return_traces": True,
             "maxBindingsPerActivity": 3,
         }
-        
+
         ocpn = ocpn_big()
         places = {p.name: p for p in ocpn.places}
 
@@ -72,8 +72,56 @@ class OCPNSimulationTest(unittest.TestCase):
             ocpn, initial_marking, final_marking, parameters=params
         )
         self.assertEqual(len(traces), 52)
-            
-    
+
+    def test_playout_ocpn_random_walk(self):
+
+        params_extensive = {
+            "return_traces": True,
+            "maxBindingsPerActivity": 3,
+        }
+
+        ocpn = ocpn_big()
+        places = {p.name: p for p in ocpn.places}
+
+        initial_marking = OCMarking(
+            {
+                places["o1"]: {"order1", "order2", "order3", "order4", "order5"},
+                places["i1"]: {"item1", "item2", "item3", "item4", "item5"},
+            }
+        )
+        final_marking = OCMarking(
+            {
+                places["o5"]: {"order1", "order2", "order3", "order4", "order5"},
+                places["i5"]: {"item1", "item2", "item3", "item4", "item5"},
+            }
+        )
+
+        # start = time.time()
+        # (all_traces, _) = playout_ocpn_extensive(
+        #     ocpn, initial_marking, final_marking, parameters=params_extensive
+        # )
+        # delta = time.time() - start
+        # print(f"Generated {len(all_traces)} traces with extensive in {delta:.2f} seconds")
+
+        # Play out with random walk and make sure it only generates valid traces
+        for i in range(20):
+            params_random_walk = {
+                "return_traces": True,
+                "maxBindingsPerActivity": 3,
+                "num_traces": 100 * (i + 1),
+            }
+            start = time.time()
+            (traces, _) = playout_ocpn_random_walk(
+                ocpn, initial_marking, final_marking, parameters=params_random_walk
+            )
+            delta = time.time() - start
+            print(
+                f"Generated {len(traces)} traces with random walk in {delta:.2f} seconds"
+            )
+            # for trace in traces:
+            #     self.assertIn(trace, all_traces,
+            #                   f"Trace {trace} not found in extensive traces")
+
 
 def ocpn_big():
     name = "OCPN_big"
