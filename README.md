@@ -189,7 +189,7 @@ ocpn = occn_converter.apply(occn, variant=occn_converter.Variants.TO_OCPN)
 
 ## Reference
 
-[1] Kuhlmann, O. (2025). *A Transformation between Object-Centric Causal Nets and Object-Centric Petri Nets*. **Unpublished** bachelor's thesis, RWTH Aachen University, Aachen, Germany (expected 10/2025).
+[1] Kuhlmann, O. (2025). *A Transformation between Object-Centric Causal Nets and Object-Centric Petri Nets*. Bachelor's thesis, RWTH Aachen University, Aachen, Germany. URL: https://www.pads.rwth-aachen.de/go/id/bqomha/lidx/1.
 
 ## Licensing
 
