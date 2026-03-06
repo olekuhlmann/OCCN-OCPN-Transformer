@@ -7,7 +7,7 @@ The implementation provides:
 1.  A transformation from any OCPN to a language-equivalent OCCN.
 2.  A transformation from any OCCN to an OCPN that underfits the OCCN while preserving as much behavioral information as possible.
 
-This repository is a fork of the popular open-source process mining library [pm4py](https://github.com/process-intelligence-solutions/pm4py) and contains all contributions, including the evaluation framework used to empirically validate the transformations alongside the formal proofs in the thesis.
+This repository is a fork of the popular open-source process mining library [PM4Py](https://github.com/process-intelligence-solutions/pm4py) and contains all contributions, including the evaluation framework used to empirically validate the transformations alongside the formal proofs in the thesis. This repository's contributions have been integrated into the official PM4Py release as of March 2026.
 
 ## Introduction
 
